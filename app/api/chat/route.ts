@@ -1,0 +1,94 @@
+import { Redis } from "@upstash/redis";
+import { NextRequest } from "next/server";
+
+// LLM providers
+import {
+  createOpenRouter,
+  OpenRouterProvider,
+} from "@openrouter/ai-sdk-provider";
+import { streamText } from "ai";
+
+// Allow streaming responses up to 30 seconds
+export const maxDuration = 30;
+
+const redis = Redis.fromEnv();
+
+export async function POST(req: NextRequest) {
+  // Rate limiting logic
+  const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  console.log("this is ip", ip);
+
+  // check if the user's IP is in the allowlist
+  const allowlist = (process.env.IP_ALLOWLIST || "")
+    .split(",")
+    .map((item) => item.trim());
+
+  if (!allowlist.includes(ip)) {
+    const rateLimitKey = `pocket-ai-ratelimit:${ip}`;
+    const currentUsage = await redis.get(rateLimitKey);
+
+    if (currentUsage && Number(currentUsage) >= 3) {
+      return new Response(
+        "bro i am api credits poor, if you are enjoying this, please dm me on x.com/vikaswakde42 for instanct access or wait for 2 hours to reset the limit",
+        { status: 429 }
+      );
+    }
+  }
+
+  try {
+    const { messages, model } = await req.json();
+
+    // check if openrouter API key is available
+    const apikey = process.env.OPENROUTER_API_KEY;
+    if (!apikey) {
+      return new Response(
+        JSON.stringify({
+          error: "No OPENROUTER_API_KEY found",
+        }),
+        { status: 500, headers: { "content-type": "application/json" } }
+      );
+    }
+
+    const openrouter = createOpenRouter({
+      apiKey: apikey,
+    });
+
+    // Use the model passed from the frotend / client or default to gemma
+    const selectedModel = model || "google/gemma-2-12b-it:free";
+
+    const result = await streamText({
+      model: openrouter.chat(selectedModel),
+      messages,
+      system:
+        "You are a pocket ai, a helpful assistant that can answer questions in very short and concise answers that are human readable, fit in a pocket card, and follow the human writing style.",
+      onFinish: async () => {
+        if (!allowlist.includes(ip)) {
+          // increment usage count after successful api call only if not in allowlist
+          const rateLimitKey = `pocket-ai-ratelimit:${ip}`;
+          const newUsage = await redis.incr(rateLimitKey);
+
+          if (newUsage === 1) {
+            // set an expiration for the key if it's the first time
+            await redis.expire(rateLimitKey, 60 * 60 * 2); // 2 hours
+          }
+        }
+      },
+    });
+
+    return result.toDataStreamResponse();
+  } catch (error) {
+    console.error("Error in pocket ai api", error);
+    // return a generic error message
+    return new Response(
+      JSON.stringify({
+        error: "An error occurred while processing your request",
+      }),
+      {
+        status: 500,
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    );
+  }
+}
