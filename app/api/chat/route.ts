@@ -2,10 +2,7 @@ import { Redis } from "@upstash/redis";
 import { NextRequest } from "next/server";
 
 // LLM providers
-import {
-  createOpenRouter,
-  OpenRouterProvider,
-} from "@openrouter/ai-sdk-provider";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText } from "ai";
 
 // Allow streaming responses up to 30 seconds

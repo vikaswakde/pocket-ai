@@ -78,6 +78,7 @@ export const ChatView = ({
 
                   return (
                     <div
+                      key={messageKey}
                       onClick={() => {
                         if (isCompleted) {
                           setExpandedReasoning((prev) => ({
@@ -180,6 +181,7 @@ export const ChatView = ({
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               handleSubmit(e as any);
             }
           }}
