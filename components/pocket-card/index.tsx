@@ -23,7 +23,7 @@ const PocketCard = () => {
       {open && (
         <motion.div
           className={cn(
-            "w-[28rem] min-h-[42rem] h-[42rem] rounded-[0.82rem]",
+            " w-[25rem] md:w-[30rem] min-h-[45rem] h-[45rem]  md:min-h-[48rem] md:h-[48rem] rounded-[0.82rem]",
             "shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_10px_15px_-3px_rgb(0_0_0/0.1),0_4px_6px_-4px_rgb(0_0_0/0.1)]",
             "dark:shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_10px_15px_-3px_rgb(255_255_255/0.1),0_4px_6px_-4px_rgb(255_255_255/0.1)]",
             "p-6 flex flex-col bg-white dark:bg-black/90 border border-neutral-300 dark:border-neutral-700/90",

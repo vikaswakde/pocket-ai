@@ -12,7 +12,7 @@ export const usePocket = () => {
   const [isChatMode, setIsChatMode] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isRateLimited, setIsRateLimited] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   // Store chat histories for each model

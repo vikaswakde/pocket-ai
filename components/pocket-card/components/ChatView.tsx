@@ -5,6 +5,10 @@ import { Message } from "@ai-sdk/react";
 import { AlertCircleIcon, SendIcon, XIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { MarkdownComponents } from "./MarkdownComponents";
+import TextareaAutosize from "react-textarea-autosize";
 
 type ChatViewProps = {
   chatContainerRef: React.RefObject<HTMLDivElement | null>;
@@ -13,7 +17,7 @@ type ChatViewProps = {
   errorMessage: string | null;
   getSelectedModelName: () => string;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  inputRef: React.RefObject<HTMLInputElement | null>;
+  inputRef: React.RefObject<HTMLTextAreaElement | null>;
   input: string;
   handleInputChange: (
     e:
@@ -52,10 +56,10 @@ export const ChatView = ({
             <motion.div
               key={index}
               className={cn(
-                "mb-4 p-3 rounded-[0.82rem] max-w-[90%]",
+                "mb-4 p-3 rounded-[0.82rem] max-w-[92%]",
                 message.role === "user"
                   ? "ml-auto bg-gray-200/45 text-gray-800 dark:bg-white/15 dark:text-white"
-                  : "bg-transparent text-gray-800 dark:text-white"
+                  : " text-gray-800 dark:text-white border border-neutral-200 dark:border-neutral-500/60"
               )}
               initial={{ opacity: 0, y: 20, filter: "blur(1.5px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -99,7 +103,7 @@ export const ChatView = ({
                         </span>
                       </div>
                       {isClipped && (
-                        <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-white/60 to-transparent dark:from-black/60" />
+                        <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-white/60 to-transparent dark:from-black/60 rounded-[0.82rem]" />
                       )}
                     </div>
                   );
@@ -110,10 +114,15 @@ export const ChatView = ({
                       key={partIndex}
                       className={cn(
                         message.role === "assistant" &&
-                          "mt-1 border-t pt-2 border-dashed border-neutral-200 dark:border-neutral-500/60"
+                          "mt-1 border-t pt-2 border-dashed border-neutral-100 dark:border-neutral-500/60"
                       )}
                     >
-                      {part.text}
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={MarkdownComponents}
+                      >
+                        {part.text}
+                      </ReactMarkdown>
                     </div>
                   );
                 }
@@ -154,11 +163,10 @@ export const ChatView = ({
 
       <form
         onSubmit={handleSubmit}
-        className="flex gap-2 border border-neutral-200 dark:border-neutral-500/60 rounded-[0.82rem] p-3 bg-white dark:bg-black/50"
+        className="flex gap-2 border border-neutral-200 dark:border-neutral-500/60 rounded-[0.82rem] p-3 dark:bg-black/50 items-end "
       >
-        <input
+        <TextareaAutosize
           ref={inputRef}
-          type="text"
           value={input}
           onChange={handleInputChange}
           placeholder={
@@ -166,8 +174,15 @@ export const ChatView = ({
               ? "You have reached the message limit."
               : `Ask ${getSelectedModelName()} a question...`
           }
-          className="flex-1 outline-none text-sm dark:text-white"
+          className="flex-1 outline-none text-sm dark:text-white bg-transparent resize-none scrollbar-hide"
           disabled={status !== "ready" || isRateLimited}
+          maxRows={5}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit(e as any);
+            }
+          }}
         />
         {status === "streaming" ? (
           <button
@@ -180,7 +195,7 @@ export const ChatView = ({
         ) : (
           <button
             type="submit"
-            className="p-2 rounded-lg bg-gray-200/45 text-gray-800 dark:bg-gray-900/85 dark:text-white cursor-pointer"
+            className="p-1 rounded-lg bg-gray-200/45 text-gray-800 dark:bg-gray-900/85 dark:text-white cursor-pointer h-fit"
             disabled={status !== "ready" || !input.trim() || isRateLimited}
           >
             <SendIcon size={16} className="mx-1" />

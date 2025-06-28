@@ -100,46 +100,44 @@ export const ModelSelectionView = ({
                     variants={modelChildrenVariants}
                     key={child.id}
                     className={cn(
-                      "flex gap-5 p-4 rounded-[0.82rem] transition-colors duration-200 mb-2 ml-2 hover:border-neutral-700 hover:backdrop-blur-2xl hover:bg-white/20 justify-between",
+                      "flex gap-5 p-4 rounded-[0.82rem] transition-colors duration-200 mb-2 ml-2 hover:border-neutral-700 hover:backdrop-blur-2xl hover:bg-white/20 justify-between group",
                       "dark:hover:border-neutral-500/60 dark:hover:bg-gray-900/20"
                     )}
                   >
-                    <div className="flex gap-4 items-center group justify-between">
-                      <div className="flex gap-4 items-center">
-                        <div className="h-8 w-8 flex-shrink-0 bg-gradient-to-br shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_10px_15px_-3px_rgb(0_0_0/0.1),0_4px_6px_-4px_rgb(0_0_0/0.1)] bg-white/10 dark:bg-black/10 rounded-xl flex items-center justify-center border-white dark:border-white/50 border-2 opacity-75">
-                          {typeof child.Icon === "object" &&
-                          "src" in child.Icon ? (
-                            <Image
-                              src={child.Icon}
-                              alt={child.name}
-                              width={16}
-                              height={16}
-                            />
-                          ) : (
-                            <child.Icon size={16} />
-                          )}
-                        </div>
-                        <div className="flex flex-col items-start flex-1">
-                          <div className="flex justify-between w-full items-center">
-                            <p className="text-xs font-semibold text-neutral-600/95 dark:text-neutral-300/95">
-                              {child.name}
-                            </p>
-                          </div>
-                          <p className="text-neutral-500/75 text-xs mt-0.5 dark:text-neutral-300/75">
-                            {child.description}
+                    <div className="flex gap-4 items-center">
+                      <div className="h-8 w-8 flex-shrink-0 bg-gradient-to-br shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_10px_15px_-3px_rgb(0_0_0/0.1),0_4px_6px_-4px_rgb(0_0_0/0.1)] bg-white/10 dark:bg-black/10 rounded-xl flex items-center justify-center border-white dark:border-white/50 border-2 opacity-75">
+                        {typeof child.Icon === "object" &&
+                        "src" in child.Icon ? (
+                          <Image
+                            src={child.Icon}
+                            alt={child.name}
+                            width={16}
+                            height={16}
+                          />
+                        ) : (
+                          <child.Icon size={16} />
+                        )}
+                      </div>
+                      <div className="flex flex-col items-start flex-1">
+                        <div className="flex justify-between w-full items-center">
+                          <p className="text-xs font-semibold text-neutral-600/95 dark:text-neutral-300/95">
+                            {child.name}
                           </p>
                         </div>
+                        <p className="text-neutral-500/75 text-xs mt-0.5 dark:text-neutral-300/75">
+                          {child.description}
+                        </p>
                       </div>
-                      <button
-                        className="flex items-center text-sm text-neutral-500/65  gap-2 group-hover:text-neutral-500/95 transition-colors duration-200 px-2 py-1 rounded-lg bg-white/80 dark:bg-black/80 backdrop-blur-2xl border border-neutral-300/90 dark:border-neutral-500/60 group cursor-pointer "
-                        onClick={(e) => handleChatWithModel(child.id, e)}
-                      >
-                        ask{" "}
-                        <span className="rotate-320 transition-transform duration-200 group-hover:-translate-y-1">
-                          &rarr;
-                        </span>
-                      </button>
                     </div>
+                    <button
+                      className="flex items-center text-sm text-neutral-500/65  gap-2 group-hover:text-neutral-500/95 transition-colors duration-200 px-2 py-1 rounded-lg bg-white/80 dark:bg-black/80 backdrop-blur-2xl border border-neutral-300/90 dark:border-neutral-500/60 group cursor-pointer "
+                      onClick={(e) => handleChatWithModel(child.id, e)}
+                    >
+                      ask{" "}
+                      <span className="rotate-320 transition-transform duration-200 group-hover:-translate-y-1">
+                        &rarr;
+                      </span>
+                    </button>
                   </motion.div>
                 ))}
               </motion.div>
