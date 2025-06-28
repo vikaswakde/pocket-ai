@@ -75,7 +75,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return result.toDataStreamResponse();
+    return result.toDataStreamResponse({
+      sendReasoning: true,
+    });
   } catch (error) {
     console.error("Error in pocket ai api", error);
     // return a generic error message
