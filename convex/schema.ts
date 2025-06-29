@@ -3,9 +3,12 @@ import { v } from "convex/values";
 
 export default defineSchema({
   chats: defineTable({
-    userId: v.string(),
+    userId: v.optional(v.string()),
+    anonymousId: v.optional(v.string()),
     model: v.string(),
-  }).index("by_user", ["userId"]),
+  })
+    .index("by_user", ["userId"])
+    .index("by_anonymous_id", ["anonymousId"]),
   messages: defineTable({
     chatId: v.id("chats"),
     content: v.string(),

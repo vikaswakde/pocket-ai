@@ -4,15 +4,21 @@ import { aiModels } from "@/data/aiModels";
 import { useChat } from "@ai-sdk/react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Model } from "../types";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
+const ANONYMOUS_USER_ID_KEY = "pocket-ai-anonymous-user-id";
+
 export const usePocket = () => {
+  // Auth
+  const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth();
+
   // UI State
   const [open, setOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [activeChatId, setActiveChatId] = useState<Id<"chats"> | null>(null);
+  const [anonymousId, setAnonymousId] = useState<string | null>(null);
   const [expandedModels, setExpandedModels] = useState<string[]>([]);
   const [isChatMode, setIsChatMode] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -36,11 +42,46 @@ export const usePocket = () => {
   // Convex Hooks
   const createChat = useMutation(api.chats.createChat);
   const sendMessage = useMutation(api.messages.sendMessage);
-  const userChats = useQuery(api.chats.getChatsForUser);
+  const migrateAnonymousChats = useMutation(api.chats.migrateAnonymousChats);
+
+  const userChats = useQuery(
+    api.chats.getChatsForUser,
+    isAuthLoading
+      ? "skip"
+      : isAuthenticated
+        ? {}
+        : { anonymousId: anonymousId ?? "skip" },
+  );
+
   const dbMessages = useQuery(
     api.messages.getMessagesForChat,
     activeChatId ? { chatId: activeChatId } : "skip",
   );
+
+  // Anonymous user management
+  useEffect(() => {
+    if (typeof window !== "undefined" && !isAuthLoading && !isAuthenticated) {
+      let anonId = localStorage.getItem(ANONYMOUS_USER_ID_KEY);
+      if (!anonId) {
+        anonId = crypto.randomUUID();
+        localStorage.setItem(ANONYMOUS_USER_ID_KEY, anonId);
+      }
+      setAnonymousId(anonId);
+    }
+  }, [isAuthenticated, isAuthLoading]);
+
+  // Chat migration
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const anonId = localStorage.getItem(ANONYMOUS_USER_ID_KEY);
+      if (isAuthenticated && anonId) {
+        migrateAnonymousChats({ anonymousId: anonId }).then(() => {
+          localStorage.removeItem(ANONYMOUS_USER_ID_KEY);
+          setAnonymousId(null);
+        });
+      }
+    }
+  }, [isAuthenticated, migrateAnonymousChats]);
 
   // Simplified helper functions
   const getSelectedModelApiId = () => {
@@ -154,7 +195,10 @@ export const usePocket = () => {
 
     if (!chatId) {
       try {
-        const newChatId = await createChat({ model: getSelectedModelApiId() });
+        const newChatId = await createChat({
+          model: getSelectedModelApiId(),
+          anonymousId: isAuthenticated ? undefined : (anonymousId ?? undefined),
+        });
         chatId = newChatId;
         setActiveChatId(newChatId);
       } catch (error) {

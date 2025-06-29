@@ -1,5 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { NextRequest } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 
 // LLM providers
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
@@ -12,24 +13,42 @@ export const maxDuration = 30;
 const redis = Redis.fromEnv();
 
 export async function POST(req: NextRequest) {
-  // Rate limiting logic
-  const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
-  console.log("this is ip", ip);
+  const { userId } = await auth();
 
-  // check if the user's IP is in the allowlist
-  const allowlist = (process.env.IP_ALLOWLIST || "")
-    .split(",")
-    .map((item) => item.trim());
-
-  if (!allowlist.includes(ip)) {
-    const rateLimitKey = `pocket-ai-ratelimit:${ip}`;
+  if (userId) {
+    // Rate limiting for logged-in users
+    const rateLimitKey = `pocket-ai-ratelimit:user:${userId}`;
     const currentUsage = await redis.get(rateLimitKey);
 
-    if (currentUsage && Number(currentUsage) >= 3) {
+    if (currentUsage && Number(currentUsage) >= 10) {
       return new Response(
-        "bro i am api credits poor, if you are enjoying this, please dm me on x.com/vikaswakde42 for instanct access or wait for 2 hours to reset the limit",
-        { status: 429 },
+        JSON.stringify({
+          error:
+            "You have reached your daily message limit. Please try again tomorrow.",
+        }),
+        { status: 429, headers: { "Content-Type": "application/json" } },
       );
+    }
+  } else {
+    // Rate limiting for anonymous users (IP-based)
+    const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    console.log("this is ip", ip);
+
+    // check if the user's IP is in the allowlist
+    const allowlist = (process.env.IP_ALLOWLIST || "")
+      .split(",")
+      .map((item) => item.trim());
+
+    if (!allowlist.includes(ip)) {
+      const rateLimitKey = `pocket-ai-ratelimit:ip:${ip}`;
+      const currentUsage = await redis.get(rateLimitKey);
+
+      if (currentUsage && Number(currentUsage) >= 3) {
+        return new Response(
+          "bro i am api credits poor, if you are enjoying this, please dm me on x.com/vikaswakde42 for instanct access or wait for 2 hours to reset the limit",
+          { status: 429 },
+        );
+      }
     }
   }
 
@@ -73,14 +92,30 @@ export async function POST(req: NextRequest) {
         },
       },
       onFinish: async () => {
-        if (!allowlist.includes(ip)) {
-          // increment usage count after successful api call only if not in allowlist
-          const rateLimitKey = `pocket-ai-ratelimit:${ip}`;
+        if (userId) {
+          // increment usage for logged-in user
+          const rateLimitKey = `pocket-ai-ratelimit:user:${userId}`;
           const newUsage = await redis.incr(rateLimitKey);
-
           if (newUsage === 1) {
-            // set an expiration for the key if it's the first time
-            await redis.expire(rateLimitKey, 60 * 60 * 2); // 2 hours
+            // Set expiration for 24 hours
+            await redis.expire(rateLimitKey, 60 * 60 * 24);
+          }
+        } else {
+          // increment usage for anonymous user
+          const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+          const allowlist = (process.env.IP_ALLOWLIST || "")
+            .split(",")
+            .map((item) => item.trim());
+
+          if (!allowlist.includes(ip)) {
+            // increment usage count after successful api call only if not in allowlist
+            const rateLimitKey = `pocket-ai-ratelimit:ip:${ip}`;
+            const newUsage = await redis.incr(rateLimitKey);
+
+            if (newUsage === 1) {
+              // set an expiration for the key if it's the first time
+              await redis.expire(rateLimitKey, 60 * 60 * 2); // 2 hours
+            }
           }
         }
       },
