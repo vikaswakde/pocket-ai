@@ -8,28 +8,35 @@ import { RefreshCwIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const PageTopMenu = () => {
-  const router = useRouter();
+  const pageReload = () => {
+    window.location.reload();
+  };
+
   return (
-    <div className="absolute top-0 right-0 p-4">
-      <div className="flex items-center gap-5">
-        <Button
-          variant="outline"
-          className="cursor-pointer"
-          onClick={() => router.refresh()}
-        >
-          <RefreshCwIcon />
-        </Button>
-        <ModeToggle />
-        <Authenticated>
-          <UserButton />
-        </Authenticated>
-        <Unauthenticated>
-          <SignInButton>
-            <Button variant="outline" className="cursor-pointer">
-              Sign in
-            </Button>
-          </SignInButton>
-        </Unauthenticated>
+    <div className="absolute top-0 right-0 left-0 p-4">
+      <div className="flex items-center justify-between gap-5">
+        <div>
+          <Authenticated>
+            <UserButton />
+          </Authenticated>
+          <Unauthenticated>
+            <SignInButton>
+              <Button variant="outline" className="cursor-pointer">
+                Sign in
+              </Button>
+            </SignInButton>
+          </Unauthenticated>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="cursor-pointer"
+            onClick={pageReload}
+          >
+            <RefreshCwIcon />
+          </Button>
+          <ModeToggle />
+        </div>
       </div>
     </div>
   );

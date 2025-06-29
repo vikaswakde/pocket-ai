@@ -22,7 +22,6 @@ const PocketCard = () => {
     ...chatProps
   } = usePocket();
 
-  const router = useRouter()
   return (
     <AnimatePresence mode="wait">
       {open && (
@@ -30,7 +29,7 @@ const PocketCard = () => {
           className={cn(
             "h-[45rem] min-h-[45rem] w-[25rem] rounded-[40px] md:h-[48rem] md:min-h-[48rem] md:w-[30rem]",
             "shadow-[0_31px_31.3px_0px_rgba(0,0,0,0.09)]",
-            "flex flex-col border border-neutral-300 bg-white px-[10px] pb-[10px] dark:border-neutral-700/90 dark:bg-[#292727]",
+            "flex flex-col border border-neutral-300 bg-white/45 px-[10px] pb-[10px] dark:border-neutral-700/90 dark:bg-[#292727]",
             GeistSans.className,
           )}
           initial={{
