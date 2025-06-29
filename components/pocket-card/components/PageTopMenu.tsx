@@ -1,11 +1,9 @@
 "use client";
-import React from "react";
 import { ModeToggle } from "@/components/mode-toggle";
+import { Button } from "@/components/ui/button";
 import { SignInButton, UserButton } from "@clerk/nextjs";
 import { Authenticated, Unauthenticated } from "convex/react";
-import { Button } from "@/components/ui/button";
 import { RefreshCwIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 const PageTopMenu = () => {
   const pageReload = () => {

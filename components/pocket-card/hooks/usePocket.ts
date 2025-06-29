@@ -3,7 +3,6 @@
 import { aiModels } from "@/data/aiModels";
 import { useChat } from "@ai-sdk/react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Model } from "../types";
 import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";

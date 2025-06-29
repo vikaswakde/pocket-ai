@@ -8,9 +8,6 @@ import { usePocket } from "./hooks/usePocket";
 import { CardHeader } from "./components/CardHeader";
 import { ChatView } from "./components/ChatView";
 import { ModelSelectionView } from "./components/ModelSelectionView";
-import { Plus } from "lucide-react";
-import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
 
 const PocketCard = () => {
   const {
