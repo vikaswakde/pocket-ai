@@ -37,7 +37,7 @@ export const ModelSelectionView = ({
         stiffness: 100,
         damping: 18,
       }}
-      className="absolute inset-0 h-full w-full bg-white/35 rounded-lg divide-y divide-neutral-200 p-2.5 overflow-y-auto scrollbar-hide dark:bg-black/35 dark:divide-neutral-500/60"
+      className="absolute inset-0 h-full w-full bg-white/35  divide-y divide-neutral-200 p-2.5 overflow-y-auto scrollbar-hide dark:bg-[#161616] dark:divide-neutral-500/60 rounded-[32px]"
     >
       {aiModels.map((model) => (
         <div key={model.id}>
@@ -101,7 +101,7 @@ export const ModelSelectionView = ({
                     key={child.id}
                     className={cn(
                       "flex gap-5 p-4 rounded-[0.82rem] transition-colors duration-200 mb-2 ml-2 hover:border-neutral-700 hover:backdrop-blur-2xl hover:bg-white/20 justify-between group",
-                      "dark:hover:border-neutral-500/60 dark:hover:bg-gray-900/20"
+                      "dark:hover:border-neutral-500/60 dark:hover:bg-gray-300/10"
                     )}
                   >
                     <div className="flex gap-4 items-center">
@@ -130,7 +130,7 @@ export const ModelSelectionView = ({
                       </div>
                     </div>
                     <button
-                      className="flex items-center text-sm text-neutral-500/65  gap-2 group-hover:text-neutral-500/95 transition-colors duration-200 px-2 py-1 rounded-lg bg-white/80 dark:bg-black/80 backdrop-blur-2xl border border-neutral-300/90 dark:border-neutral-500/60 group cursor-pointer "
+                      className="flex items-center text-sm text-neutral-500/65  gap-2 group-hover:text-neutral-500/95 transition-colors duration-200 px-2 py-1 rounded-lg bg-white/80 dark:bg-black/70 backdrop-blur-2xl border border-neutral-300/90 dark:border-neutral-500/60 group cursor-pointer "
                       onClick={(e) => handleChatWithModel(child.id, e)}
                     >
                       ask{" "}

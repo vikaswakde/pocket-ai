@@ -1,11 +1,9 @@
 import PocketCard from "@/components/PocketCard";
-import { ModeToggle } from "@/components/mode-toggle";
+import PageTopMenu from "@/components/pocket-card/components/PageTopMenu";
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-50 dark:bg-black/90">
-      <div className="absolute top-0 right-0 p-4">
-        <ModeToggle />
-      </div>
+    <div className="bg-framer-effect flex h-screen flex-col items-center justify-center">
+      <PageTopMenu />
       <PocketCard />
     </div>
   );

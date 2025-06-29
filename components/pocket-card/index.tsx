@@ -8,6 +8,9 @@ import { usePocket } from "./hooks/usePocket";
 import { CardHeader } from "./components/CardHeader";
 import { ChatView } from "./components/ChatView";
 import { ModelSelectionView } from "./components/ModelSelectionView";
+import { Plus } from "lucide-react";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 const PocketCard = () => {
   const {
@@ -18,16 +21,17 @@ const PocketCard = () => {
     exitChatMode,
     ...chatProps
   } = usePocket();
+
+  const router = useRouter()
   return (
     <AnimatePresence mode="wait">
       {open && (
         <motion.div
           className={cn(
-            " w-[25rem] md:w-[30rem] min-h-[45rem] h-[45rem]  md:min-h-[48rem] md:h-[48rem] rounded-[0.82rem]",
-            "shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_10px_15px_-3px_rgb(0_0_0/0.1),0_4px_6px_-4px_rgb(0_0_0/0.1)]",
-            "dark:shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_10px_15px_-3px_rgb(255_255_255/0.1),0_4px_6px_-4px_rgb(255_255_255/0.1)]",
-            "p-6 flex flex-col bg-white dark:bg-black/90 border border-neutral-300 dark:border-neutral-700/90",
-            GeistSans.className
+            "h-[45rem] min-h-[45rem] w-[25rem] rounded-[40px] md:h-[48rem] md:min-h-[48rem] md:w-[30rem]",
+            "shadow-[0_31px_31.3px_0px_rgba(0,0,0,0.09)]",
+            "flex flex-col border border-neutral-300 bg-white px-[10px] pb-[10px] dark:border-neutral-700/90 dark:bg-[#292727]",
+            GeistSans.className,
           )}
           initial={{
             opacity: 0,
@@ -63,7 +67,7 @@ const PocketCard = () => {
 
           {!isChatMode && (
             <motion.p
-              className="text-neutral-600/70 text-[15px] leading-5 text-wrap max-w-[52%] -mt-3.5 dark:text-neutral-300/70"
+              className="-mt-3.5 max-w-[52%] px-4 text-[15px] leading-5 text-wrap text-neutral-600/70 dark:text-neutral-300/70"
               initial={{
                 y: 300,
                 opacity: 0,
@@ -100,7 +104,7 @@ const PocketCard = () => {
           )}
 
           <motion.div
-            className="flex-1 mt-8 bg-gray-100 rounded-[0.82rem] border border-dashed border-neutral-300 dark:border-neutral-600/90 dark:bg-black relative"
+            className="relative mt-8 flex-1 rounded-[32px] border border-neutral-300 bg-[#F5F5F5] shadow-[0_8px_25px_rgb(0,0,0,0.12)] dark:border-[2px] dark:border-neutral-600/90 dark:bg-[#161616]"
             initial={{
               y: 100,
               opacity: 0,

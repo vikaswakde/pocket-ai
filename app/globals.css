@@ -200,3 +200,75 @@
 ::view-transition-new(root) {
   animation: reveal 0.5s ease-in-out;
 }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+.bg-framer-effect {
+  background-color: #EBEBEB;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-framer-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(0, 0, 0, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.bg-framer-effect::after {
+  content: '';
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 
+    40px 70px 0 rgba(0, 0, 0, 0.1),
+    120px 150px 0 rgba(0, 0, 0, 0.1),
+    200px 30px 0 rgba(0, 0, 0, 0.1),
+    300px 200px 0 rgba(0, 0, 0, 0.1),
+    400px 100px 0 rgba(0, 0, 0, 0.1),
+    500px 300px 0 rgba(0, 0, 0, 0.1),
+    600px 200px 0 rgba(0, 0, 0, 0.1),
+    700px 100px 0 rgba(0, 0, 0, 0.1),
+    800px 250px 0 rgba(0, 0, 0, 0.1);
+  animation: twinkle 4s infinite alternate;
+}
+
+.dark .bg-framer-effect {
+  background-color: #161616;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+.dark .bg-framer-effect::before {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+}
+
+.dark .bg-framer-effect::after {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    40px 70px 0 rgba(255, 255, 255, 0.1),
+    120px 150px 0 rgba(255, 255, 255, 0.1),
+    200px 30px 0 rgba(255, 255, 255, 0.1),
+    300px 200px 0 rgba(255, 255, 255, 0.1),
+    400px 100px 0 rgba(255, 255, 255, 0.1),
+    500px 300px 0 rgba(255, 255, 255, 0.1),
+    600px 200px 0 rgba(255, 255, 255, 0.1),
+    700px 100px 0 rgba(255, 255, 255, 0.1),
+    800px 250px 0 rgba(255, 255, 255, 0.1);
+}

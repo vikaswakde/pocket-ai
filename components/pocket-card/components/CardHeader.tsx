@@ -20,7 +20,7 @@ export const CardHeader = ({
   setOpen,
 }: CardHeaderProps) => {
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between px-4 pt-4">
       {!isChatMode && (
         <motion.h2
           className="text-2xl font-semibold text-neutral-700/90 dark:text-neutral-300/90"

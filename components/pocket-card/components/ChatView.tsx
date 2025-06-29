@@ -48,7 +48,7 @@ export const ChatView = ({
   >({});
 
   return (
-    <div className="absolute inset-0 flex h-full w-full flex-col rounded-[0.82rem] bg-white/35 p-4 dark:bg-black/35">
+    <div className="absolute inset-0 flex h-full w-full flex-col rounded-[32px] bg-white/35 p-4 dark:bg-[#161616]">
       <div
         ref={chatContainerRef}
         className="scrollbar-hide mb-4 flex-1 overflow-y-auto"
@@ -70,10 +70,10 @@ export const ChatView = ({
               <motion.div
                 key={index}
                 className={cn(
-                  "mb-4 max-w-[92%] rounded-[0.82rem] p-3",
+                  "mb-4 max-w-[92%] p-3 dark:rounded-[20px]",
                   message.role === "user"
-                    ? "ml-auto bg-gray-200/45 text-gray-800 dark:bg-white/15 dark:text-white"
-                    : "border border-neutral-200 text-gray-800 dark:border-neutral-500/60 dark:text-white",
+                    ? "ml-auto rounded-[20px] bg-[#f1f1f3] text-gray-800 dark:bg-white/15 dark:text-white"
+                    : "rounded-[23px] border border-neutral-200 text-gray-800 dark:rounded-[20px] dark:border-neutral-500/60 dark:text-white",
                 )}
                 initial={{ opacity: 0, y: 20, filter: "blur(1.5px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -154,7 +154,7 @@ export const ChatView = ({
                           </span>
                         </div>
                         {isClipped && (
-                          <div className="absolute bottom-0 left-0 h-6 w-full rounded-[0.82rem] bg-gradient-to-t from-white/60 to-transparent dark:from-black/60" />
+                          <div className="absolute bottom-0 left-0 h-6 w-full  bg-gradient-to-t from-white/60 to-transparent dark:rounded-[32px] dark:from-black/60" />
                         )}
                       </div>
                     );
@@ -164,6 +164,7 @@ export const ChatView = ({
                       <div
                         key={partIndex}
                         className={cn(
+                          "dark:text-white/90",
                           message.role === "assistant" &&
                             hasReasoning &&
                             "mt-1 border-t border-dashed border-neutral-100 pt-2 dark:border-neutral-500/60",
