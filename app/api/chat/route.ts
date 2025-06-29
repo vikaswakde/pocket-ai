@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 
 // LLM providers
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { perplexity } from "@ai-sdk/perplexity";
 import { streamText } from "ai";
 
 // Allow streaming responses up to 30 seconds
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
     if (currentUsage && Number(currentUsage) >= 3) {
       return new Response(
         "bro i am api credits poor, if you are enjoying this, please dm me on x.com/vikaswakde42 for instanct access or wait for 2 hours to reset the limit",
-        { status: 429 }
+        { status: 429 },
       );
     }
   }
@@ -35,29 +36,42 @@ export async function POST(req: NextRequest) {
   try {
     const { messages, model } = await req.json();
 
-    // check if openrouter API key is available
-    const apikey = process.env.OPENROUTER_API_KEY;
-    if (!apikey) {
-      return new Response(
-        JSON.stringify({
-          error: "No OPENROUTER_API_KEY found",
-        }),
-        { status: 500, headers: { "content-type": "application/json" } }
-      );
+    const selectedModel = model || "google/gemma-2-12b-it:free";
+    const isPerplexity = selectedModel.includes("sonar");
+    let modelInstance;
+
+    if (isPerplexity) {
+      if (!process.env.PERPLEXITY_API_KEY) {
+        return new Response(
+          JSON.stringify({ error: "No PERPLEXITY_API_KEY found" }),
+          { status: 500, headers: { "content-type": "application/json" } },
+        );
+      }
+      modelInstance = perplexity(selectedModel);
+    } else {
+      const openrouterApiKey = process.env.OPENROUTER_API_KEY;
+      if (!openrouterApiKey) {
+        return new Response(
+          JSON.stringify({ error: "No OPENROUTER_API_KEY found" }),
+          { status: 500, headers: { "content-type": "application/json" } },
+        );
+      }
+      modelInstance = createOpenRouter({
+        apiKey: openrouterApiKey,
+      }).chat(selectedModel);
     }
 
-    const openrouter = createOpenRouter({
-      apiKey: apikey,
-    });
-
-    // Use the model passed from the frotend / client or default to gemma
-    const selectedModel = model || "google/gemma-2-12b-it:free";
-
     const result = await streamText({
-      model: openrouter.chat(selectedModel),
+      model: modelInstance,
       messages,
       system:
         "You are a pocket ai, a helpful assistant that can answer questions in very short and concise answers that are human readable, fit in a pocket card, and follow the human writing style.",
+      providerOptions: {
+        perplexity: {
+          return_images: true,
+          max_tokens: 300,
+        },
+      },
       onFinish: async () => {
         if (!allowlist.includes(ip)) {
           // increment usage count after successful api call only if not in allowlist
@@ -74,6 +88,7 @@ export async function POST(req: NextRequest) {
 
     return result.toDataStreamResponse({
       sendReasoning: true,
+      sendSources: true,
     });
   } catch (error) {
     console.error("Error in pocket ai api", error);
@@ -87,7 +102,7 @@ export async function POST(req: NextRequest) {
         headers: {
           "content-type": "application/json",
         },
-      }
+      },
     );
   }
 }

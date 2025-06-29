@@ -2,13 +2,15 @@
 
 import { cn } from "@/lib/utils";
 import { Message } from "@ai-sdk/react";
-import { AlertCircleIcon, SendIcon, XIcon } from "lucide-react";
+import { AlertCircleIcon, LinkIcon, SendIcon, XIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { MarkdownComponents } from "./MarkdownComponents";
 import TextareaAutosize from "react-textarea-autosize";
+import Link from "next/link";
 
 type ChatViewProps = {
   chatContainerRef: React.RefObject<HTMLDivElement | null>;
@@ -56,6 +58,14 @@ export const ChatView = ({
             const hasReasoning = message.parts?.some(
               (p) => p.type === "reasoning",
             );
+
+            const sourceParts = message.parts?.filter(
+              (p) => p.type === "source",
+            );
+            const otherParts = message.parts?.filter(
+              (p) => p.type !== "source",
+            );
+
             return (
               <motion.div
                 key={index}
@@ -69,7 +79,43 @@ export const ChatView = ({
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 0.3 }}
               >
-                {message.parts?.map((part, partIndex) => {
+                {sourceParts && sourceParts.length > 0 && (
+                  <div className="mb-2 border-b border-dashed border-neutral-100 pb-2 dark:border-neutral-500/60">
+                    <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                      <LinkIcon size={16} />
+                      <h4 className="font-semibold">Sources</h4>
+                    </div>
+                    <div className="mt-2 flex flex-col gap-1.5">
+                      {sourceParts.map((part, i) => {
+                        const source = part.source;
+                        const hostname = new URL(source.url).hostname;
+                        return (
+                          <Link
+                            key={i}
+                            id={`source-${i}`}
+                            href={source.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 truncate rounded-md p-1 text-sm text-blue-500 transition-colors hover:bg-black/5 hover:underline dark:hover:bg-white/5"
+                            title={source.url}
+                          >
+                            <Image
+                              src={`https://www.google.com/s2/favicons?sz=32&domain=${hostname}`}
+                              alt={`${hostname} favicon`}
+                              className="h-6 w-6 rounded-full"
+                              width={24}
+                              height={24}
+                            />
+                            <span className="truncate">
+                              {source.title || new URL(source.url).hostname}
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+                {otherParts?.map((part, partIndex) => {
                   if (part.type === "reasoning") {
                     const isLastMessage = index === messages.length - 1;
                     const isStreaming = status === "streaming";
@@ -133,7 +179,7 @@ export const ChatView = ({
                     );
                   }
                   return null;
-                }) || message.content}
+                })}
               </motion.div>
             );
           })}

@@ -4,6 +4,7 @@ import {
   Meta,
   Microsoft,
   Mistral,
+  Perplexity,
   Qwen,
 } from "@lobehub/icons";
 import Sarvam from "@/images/sarvam-ai-logo.png";
@@ -132,6 +133,29 @@ export const aiModels: Model[] = [
         description: "Advanced reasoning capabilities",
         Icon: Microsoft.Avatar,
         apiId: "microsoft/mai-ds-r1:free",
+      },
+    ],
+  },
+  {
+    id: "sonar",
+    name: "Perplexity",
+    description: "A collection of top Perplexity models",
+    Icon: Perplexity.Avatar,
+    apiId: "sonar",
+    children: [
+      {
+        id: "sonar",
+        name: "Sonar",
+        description: "Fast, efficient web search",
+        Icon: Perplexity.Avatar,
+        apiId: "sonar",
+      },
+      {
+        id: "sonar-pro",
+        name: "Sonar Pro",
+        description: "Advanced and efficient web search",
+        Icon: Perplexity.Avatar,
+        apiId: "sonar-pro",
       },
     ],
   },
