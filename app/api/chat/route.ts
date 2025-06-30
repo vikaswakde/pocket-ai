@@ -45,8 +45,8 @@ export async function POST(req: NextRequest) {
 
       if (currentUsage && Number(currentUsage) >= 3) {
         return new Response(
-          "bro i am api credits poor, if you are enjoying this, please dm me on x.com/vikaswakde42 for instanct access or wait for 2 hours to reset the limit",
-          { status: 429 },
+          JSON.stringify({ error: "Sign in to increase limits" }),
+          { status: 429, headers: { "Content-Type": "application/json" } },
         );
       }
     }

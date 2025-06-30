@@ -33,11 +33,16 @@ const PageTopMenu = () => {
             </Button>
           </Authenticated>
           <Unauthenticated>
-            <SignInButton>
-              <Button variant="outline" className="cursor-pointer py-[1.3rem] -ml-2">
-                Sign in
-              </Button>
-            </SignInButton>
+            <div className="">
+              <SignInButton mode="modal">
+                <Button
+                  variant="outline"
+                  className="-ml-2 cursor-pointer py-[1.3rem]"
+                >
+                  Sign in
+                </Button>
+              </SignInButton>
+            </div>
           </Unauthenticated>
         </div>
       </div>

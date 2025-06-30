@@ -11,6 +11,8 @@ import remarkGfm from "remark-gfm";
 import { MarkdownComponents } from "./MarkdownComponents";
 import TextareaAutosize from "react-textarea-autosize";
 import Link from "next/link";
+import { SignInButton } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
 
 type ChatViewProps = {
   chatContainerRef: React.RefObject<HTMLDivElement | null>;
@@ -28,6 +30,7 @@ type ChatViewProps = {
   ) => void;
   isRateLimited: boolean;
   stop: () => void;
+  showSignInButton?: boolean;
 };
 
 export const ChatView = ({
@@ -42,6 +45,7 @@ export const ChatView = ({
   handleInputChange,
   isRateLimited,
   stop,
+  showSignInButton,
 }: ChatViewProps) => {
   const [expandedReasoning, setExpandedReasoning] = useState<
     Record<string, boolean>
@@ -210,6 +214,21 @@ export const ChatView = ({
             >
               <AlertCircleIcon size={16} />
               <span className="text-sm">{errorMessage}</span>
+            </motion.div>
+          )}
+
+          {showSignInButton && (
+            <motion.div
+              className="mb-4"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+            >
+              <SignInButton mode="modal">
+                <Button variant="outline" className="rounded-[32px]">
+                  Sign In to Continue
+                </Button>
+              </SignInButton>
             </motion.div>
           )}
         </AnimatePresence>

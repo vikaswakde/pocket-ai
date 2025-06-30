@@ -22,6 +22,7 @@ export const usePocket = () => {
   const [isChatMode, setIsChatMode] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isRateLimited, setIsRateLimited] = useState(false);
+  const [showSignInButton, setShowSignInButton] = useState(false);
 
   // Refs
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -128,6 +129,9 @@ export const usePocket = () => {
           .json()
           .then((data) => {
             if (response.status === 429) {
+              if (data.error === "Sign in to increase limits") {
+                setShowSignInButton(true);
+              }
               setErrorMessage(
                 data.error ||
                   "bro i am api credits poor, if you are enjoying this, please dm me on x.com/vikaswakde42",
@@ -262,7 +266,9 @@ export const usePocket = () => {
     setIsChatMode(false);
     setActiveChatId(null);
     setMessages([]);
-    setErrorMessage(null); // Clear any errors when exiting chat mode
+    setErrorMessage(null);
+    setIsRateLimited(false);
+    setShowSignInButton(false);
   };
 
   return {
@@ -273,6 +279,7 @@ export const usePocket = () => {
     isChatMode,
     errorMessage,
     isRateLimited,
+    showSignInButton,
     inputRef,
     chatContainerRef,
     messages,
