@@ -39,6 +39,7 @@ export const useAIChat = ({
     body: {
       model: selectedModelApiId,
     },
+    experimental_throttle: 50,
     onFinish: (message) => {
       if (activeChatIdRef.current) {
         sendMessage({
