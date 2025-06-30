@@ -8,6 +8,7 @@ import { usePocket } from "./hooks/usePocket";
 import { CardHeader } from "./components/CardHeader";
 import { ChatView } from "./components/ChatView";
 import { ModelSelectionView } from "./components/ModelSelectionView";
+import CardNotHoverState from "./components/CardNotHoverState";
 
 const PocketCard = () => {
   const {
@@ -18,6 +19,7 @@ const PocketCard = () => {
     exitChatMode,
     ...chatProps
   } = usePocket();
+  const [isHovered, setIsHovered] = React.useState(false);
 
   return (
     <AnimatePresence mode="wait">
@@ -100,6 +102,8 @@ const PocketCard = () => {
           )}
 
           <motion.div
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             className="relative mt-8 flex-1 rounded-[32px] border border-neutral-300 bg-[#F5F5F5] shadow-[0_8px_25px_rgb(0,0,0,0.12)] dark:border-[2px] dark:border-neutral-600/90 dark:bg-[#161616]"
             initial={{
               y: 100,
@@ -133,7 +137,23 @@ const PocketCard = () => {
                 getSelectedModelName={getSelectedModelName}
               />
             ) : (
-              <ModelSelectionView {...chatProps} />
+              <>
+                {!isHovered && !isChatMode && <CardNotHoverState />}
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    filter: "blur(4px)",
+                  }}
+                  animate={{
+                    opacity: isHovered ? 1 : 0,
+                    filter: isHovered ? "blur(0px)" : "blur(4px)",
+                  }}
+                  transition={{ ease: "easeInOut", duration: 0.3 }}
+                  className={cn("h-full", !isHovered && "pointer-events-none")}
+                >
+                  <ModelSelectionView {...chatProps} />
+                </motion.div>
+              </>
             )}
           </motion.div>
         </motion.div>
