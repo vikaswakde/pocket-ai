@@ -1,15 +1,14 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
+import { useChat, Message } from "@ai-sdk/react";
 import { useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
-
 type SendMessageFunction = (options: {
   chatId: Id<"chats">;
   role: "user" | "assistant";
   content: string;
-  parts?: any;
-}) => Promise<any>;
+  parts?: Message["parts"];
+}) => Promise<unknown>;
 
 interface UseAIChatProps {
   activeChatId: Id<"chats"> | null;
