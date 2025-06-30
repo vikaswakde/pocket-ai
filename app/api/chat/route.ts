@@ -1,6 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { NextRequest } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 // LLM providers
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
@@ -14,20 +14,30 @@ const redis = Redis.fromEnv();
 
 export async function POST(req: NextRequest) {
   const { userId } = await auth();
+  const currUser = await currentUser();
 
   if (userId) {
-    // Rate limiting for logged-in users
-    const rateLimitKey = `pocket-ai-ratelimit:user:${userId}`;
-    const currentUsage = await redis.get(rateLimitKey);
-
-    if (currentUsage && Number(currentUsage) >= 10) {
-      return new Response(
-        JSON.stringify({
-          error:
-            "You have reached your daily message limit. Please try again tomorrow.",
-        }),
-        { status: 429, headers: { "Content-Type": "application/json" } },
+    // Check for exception email
+    const isExceptionUser =
+      currUser?.emailAddresses?.[0]?.emailAddress?.includes(
+        "vikaswakdepc@gmail.com",
       );
+
+    // Skip rate limiting for the exception user
+    if (!isExceptionUser) {
+      // Rate limiting for logged-in users
+      const rateLimitKey = `pocket-ai-ratelimit:user:${userId}`;
+      const currentUsage = await redis.get(rateLimitKey);
+
+      if (currentUsage && Number(currentUsage) >= 10) {
+        return new Response(
+          JSON.stringify({
+            error:
+              "Subscribe to get unlimited access to pocket ai, or try again tomorrow.",
+          }),
+          { status: 429, headers: { "Content-Type": "application/json" } },
+        );
+      }
     }
   } else {
     // Rate limiting for anonymous users (IP-based)
