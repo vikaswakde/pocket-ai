@@ -11,29 +11,34 @@ const PageTopMenu = () => {
   };
 
   return (
-    <div className="absolute top-0 right-0 left-0 p-4">
+    <div className="absolute top-0 z-10 mx-auto p-4">
       <div className="flex items-center justify-between gap-5">
-        <div>
-          <Authenticated>
-            <UserButton />
-          </Authenticated>
-          <Unauthenticated>
-            <SignInButton>
-              <Button variant="outline" className="cursor-pointer">
-                Sign in
-              </Button>
-            </SignInButton>
-          </Unauthenticated>
-        </div>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            className="cursor-pointer"
+            className="cursor-pointer py-[1.3rem]"
             onClick={pageReload}
           >
             <RefreshCwIcon />
           </Button>
           <ModeToggle />
+        </div>
+        <div className="flex items-center gap-2">
+          <Authenticated>
+            <Button
+              variant="outline"
+              className="-ml-2 cursor-pointer px-[8px] py-[1.3rem]"
+            >
+              <UserButton />
+            </Button>
+          </Authenticated>
+          <Unauthenticated>
+            <SignInButton>
+              <Button variant="outline" className="cursor-pointer py-[1.3rem] -ml-2">
+                Sign in
+              </Button>
+            </SignInButton>
+          </Unauthenticated>
         </div>
       </div>
     </div>
