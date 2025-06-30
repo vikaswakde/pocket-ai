@@ -10,4 +10,5 @@ export type Model = {
   Icon: ModelIcon;
   apiId: string;
   children?: Model[];
+  labels?: string[];
 };

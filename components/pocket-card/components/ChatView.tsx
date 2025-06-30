@@ -154,7 +154,7 @@ export const ChatView = ({
                           </span>
                         </div>
                         {isClipped && (
-                          <div className="absolute bottom-0 left-0 h-6 w-full  bg-gradient-to-t from-white/60 to-transparent dark:rounded-[32px] dark:from-black/60" />
+                          <div className="absolute bottom-0 left-0 h-6 w-full bg-gradient-to-t from-white/60 to-transparent dark:rounded-[32px] dark:from-black/60" />
                         )}
                       </div>
                     );

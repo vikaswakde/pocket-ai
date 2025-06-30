@@ -1,17 +1,29 @@
 "use client";
 
-import {
-  listVariants,
-  caretVariants,
-  modelParentVariants,
-  modelChildrenVariants,
-} from "../animations";
-import { Model } from "../types";
+import { aiModels } from "@/data/aiModels";
 import { cn } from "@/lib/utils";
+import {
+  ArrowRight,
+  BrainCircuit,
+  ChevronRightIcon,
+  Code,
+  Eye,
+  File,
+  Languages,
+  Layers,
+  Mic,
+  Search,
+  Shield,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
-import { ChevronRightIcon } from "lucide-react";
-import { aiModels } from "@/data/aiModels";
+import {
+  caretVariants,
+  listVariants,
+  modelChildrenVariants,
+  modelParentVariants,
+} from "../animations";
+import { Model } from "../types";
 
 type ModelSelectionViewProps = {
   selectedModel: string | null;
@@ -26,6 +38,35 @@ export const ModelSelectionView = ({
   expandedModels,
   handleChatWithModel,
 }: ModelSelectionViewProps) => {
+  const getLabelIcon = (label: string, size: number = 12) => {
+    const iconProps = {
+      size,
+      className: "text-neutral-500 dark:text-neutral-400",
+    };
+    switch (label.toLowerCase()) {
+      case "vision":
+        return <Eye {...iconProps} />;
+      case "reasoning":
+        return <BrainCircuit {...iconProps} />;
+      case "code":
+        return <Code {...iconProps} />;
+      case "multimodal":
+        return <Layers {...iconProps} />;
+      case "safety":
+        return <Shield {...iconProps} />;
+      case "web search":
+        return <Search {...iconProps} />;
+      case "indic languages":
+        return <Languages {...iconProps} />;
+      case "voice":
+        return <Mic {...iconProps} />;
+      case "PDF's":
+        return <File {...iconProps} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <motion.div
       variants={listVariants}
@@ -37,21 +78,21 @@ export const ModelSelectionView = ({
         stiffness: 100,
         damping: 18,
       }}
-      className="absolute inset-0 h-full w-full bg-white/35  divide-y divide-neutral-200 p-2.5 overflow-y-auto scrollbar-hide dark:bg-[#161616] dark:divide-neutral-500/60 rounded-[32px]"
+      className="scrollbar-hide absolute inset-0 h-full w-full divide-y divide-neutral-200 overflow-y-auto rounded-[32px] bg-white/35 p-2.5 dark:divide-neutral-500/60 dark:bg-[#161616]"
     >
       {aiModels.map((model) => (
         <div key={model.id}>
           <div
             className={cn(
-              "flex gap-4 p-5 m-1 rounded-xl cursor-pointer transition-colors duration-200  hover:border-neutral-300 hover:backdrop-blur-2xl",
-              selectedModel === model.id && "bg-black/5 dark:bg-white/5"
+              "m-1 flex cursor-pointer gap-4 rounded-xl p-5 transition-colors duration-200 hover:border-neutral-300 hover:backdrop-blur-2xl",
+              selectedModel === model.id && "bg-black/5 dark:bg-white/5",
             )}
             onClick={() => handleCardClick(model.id)}
           >
             <div className="flex items-center">
               {model.children && model.children.length > 0 && (
                 <motion.div
-                  className="mr-2 text-neutral-500 dark:text-neutral-500/80 h-4 w-4 flex items-center justify-center"
+                  className="mr-2 flex h-4 w-4 items-center justify-center text-neutral-500 dark:text-neutral-500/80"
                   initial="closed"
                   animate={
                     expandedModels.includes(model.id) ? "open" : "closed"
@@ -62,7 +103,7 @@ export const ModelSelectionView = ({
                   <ChevronRightIcon size={16} />
                 </motion.div>
               )}
-              <div className="h-12 w-12 flex-shrink-0 bg-gradient-to-br shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_10px_15px_-3px_rgb(0_0_0/0.1),0_4px_6px_-4px_rgb(0_0_0/0.1)] bg-white/10 dark:bg-black/10 rounded-3xl flex items-center justify-center border-white dark:border-white/50 border-2 opacity-75">
+              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-3xl border-2 border-white bg-white/10 bg-gradient-to-br opacity-75 shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_10px_15px_-3px_rgb(0_0_0/0.1),0_4px_6px_-4px_rgb(0_0_0/0.1)] dark:border-white/50 dark:bg-black/10">
                 {typeof model.Icon === "object" && "src" in model.Icon ? (
                   <Image
                     src={model.Icon}
@@ -75,11 +116,11 @@ export const ModelSelectionView = ({
                 )}
               </div>
             </div>
-            <div className="flex flex-col items-start">
+            <div className="flex flex-1 flex-col items-start">
               <p className="text-sm font-semibold text-neutral-600/95 dark:text-neutral-300/95">
                 {model.name}
               </p>
-              <p className="text-neutral-500/75 text-sm mt-1 dark:text-neutral-300/75">
+              <p className="mt-1 text-sm text-neutral-500/75 dark:text-neutral-300/75">
                 {model.description}
               </p>
             </div>
@@ -89,7 +130,7 @@ export const ModelSelectionView = ({
           <AnimatePresence>
             {expandedModels.includes(model.id) && model.children && (
               <motion.div
-                className="pl-2 border-l border-neutral-200 dark:border-neutral-500/60 ml-8"
+                className="ml-8 border-l border-neutral-200 pl-2 dark:border-neutral-500/60"
                 variants={modelParentVariants}
                 initial="closed"
                 animate="open"
@@ -100,12 +141,12 @@ export const ModelSelectionView = ({
                     variants={modelChildrenVariants}
                     key={child.id}
                     className={cn(
-                      "flex gap-5 p-4 rounded-[0.82rem] transition-colors duration-200 mb-2 ml-2 hover:border-neutral-700 hover:backdrop-blur-2xl hover:bg-white/20 justify-between group",
-                      "dark:hover:border-neutral-500/60 dark:hover:bg-gray-300/10"
+                      "group mb-2 ml-2 flex justify-between gap-5 rounded-[0.82rem] p-4 transition-colors duration-200 hover:border-neutral-700 hover:bg-white/20 hover:backdrop-blur-2xl",
+                      "dark:hover:border-neutral-500/60 dark:hover:bg-gray-300/10",
                     )}
                   >
-                    <div className="flex gap-4 items-center">
-                      <div className="h-8 w-8 flex-shrink-0 bg-gradient-to-br shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_10px_15px_-3px_rgb(0_0_0/0.1),0_4px_6px_-4px_rgb(0_0_0/0.1)] bg-white/10 dark:bg-black/10 rounded-xl flex items-center justify-center border-white dark:border-white/50 border-2 opacity-75">
+                    <div className="flex flex-1 items-start gap-4">
+                      <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border-2 border-white bg-white/10 bg-gradient-to-br opacity-75 shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_10px_15px_-3px_rgb(0_0_0/0.1),0_4px_6px_-4px_rgb(0_0_0/0.1)] dark:border-white/50 dark:bg-black/10">
                         {typeof child.Icon === "object" &&
                         "src" in child.Icon ? (
                           <Image
@@ -118,25 +159,39 @@ export const ModelSelectionView = ({
                           <child.Icon size={16} />
                         )}
                       </div>
-                      <div className="flex flex-col items-start flex-1">
-                        <div className="flex justify-between w-full items-center">
+                      <div className="flex flex-1 flex-col items-start">
+                        <div className="flex w-full items-center justify-between">
                           <p className="text-xs font-semibold text-neutral-600/95 dark:text-neutral-300/95">
                             {child.name}
                           </p>
                         </div>
-                        <p className="text-neutral-500/75 text-xs mt-0.5 dark:text-neutral-300/75">
+                        <p className="mt-0.5 text-xs text-neutral-500/75 dark:text-neutral-300/75">
                           {child.description}
                         </p>
+                        {child.labels && child.labels.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {child.labels.map((label) => (
+                              <div
+                                key={label}
+                                className="flex items-center gap-2 rounded-full bg-neutral-200/50 px-2 py-0.5 text-[10px] text-neutral-500 dark:bg-neutral-600/50 dark:text-neutral-400"
+                              >
+                                {getLabelIcon(label)}
+                                {label}
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <button
-                      className="flex items-center text-sm text-neutral-500/65  gap-2 group-hover:text-neutral-500/95 transition-colors duration-200 px-2 py-1 rounded-lg bg-white/80 dark:bg-black/70 backdrop-blur-2xl border border-neutral-300/90 dark:border-neutral-500/60 group cursor-pointer "
+                      className="cursor-pointer self-center rounded-lg px-3 py-1.5 text-sm text-neutral-400 transition-colors duration-200 group-hover:bg-neutral-100 dark:group-hover:bg-neutral-700 dark:hover:bg-neutral-800 hover:border-neutral-200 dark:hover:border-neutral-500/60 hover:border bg-neutral-200/10 dark:bg-black/10"
                       onClick={(e) => handleChatWithModel(child.id, e)}
                     >
-                      ask{" "}
-                      <span className="rotate-320 transition-transform duration-200 group-hover:-translate-y-1">
-                        &rarr;
-                      </span>
+                      <span className="text-xs">ask</span>{" "}
+                      <ArrowRight
+                        size={12}
+                        className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ml-1 inline -rotate-45 transition-transform duration-200 group-hover:scale-125 "
+                      />
                     </button>
                   </motion.div>
                 ))}
