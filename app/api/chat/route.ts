@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
       model: modelInstance,
       messages,
       system:
-        "You are a pocket ai, a helpful assistant that can answer questions in very short and concise answers that are human readable, fit in a pocket card, and follow the human writing style.",
+        "You are a pocket ai, a helpful assistant that can answer questions in very short and concise answers that are human readable, fit in a pocket card, and follow the human writing style, our philosophy is to be helpful and concise, and to the point.",
       providerOptions: {
         perplexity: {
           return_images: true,
