@@ -1,6 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { NextRequest } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 
 // LLM providers
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
@@ -14,30 +14,20 @@ const redis = Redis.fromEnv();
 
 export async function POST(req: NextRequest) {
   const { userId } = await auth();
-  const currUser = await currentUser();
 
   if (userId) {
-    // Check for exception email
-    const isExceptionUser =
-      currUser?.emailAddresses?.[0]?.emailAddress?.includes(
-        "vikaswakdepc@gmail.com",
+    // Rate limiting for logged-in users
+    const rateLimitKey = `pocket-ai-ratelimit:user:${userId}`;
+    const currentUsage = await redis.get(rateLimitKey);
+
+    if (currentUsage && Number(currentUsage) >= 10) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "You have reached your daily message limit. Please try again tomorrow.",
+        }),
+        { status: 429, headers: { "Content-Type": "application/json" } },
       );
-
-    // Skip rate limiting for the exception user
-    if (!isExceptionUser) {
-      // Rate limiting for logged-in users
-      const rateLimitKey = `pocket-ai-ratelimit:user:${userId}`;
-      const currentUsage = await redis.get(rateLimitKey);
-
-      if (currentUsage && Number(currentUsage) >= 10) {
-        return new Response(
-          JSON.stringify({
-            error:
-              "Subscribe to get unlimited access to pocket ai, or try again tomorrow.",
-          }),
-          { status: 429, headers: { "Content-Type": "application/json" } },
-        );
-      }
     }
   } else {
     // Rate limiting for anonymous users (IP-based)
@@ -94,7 +84,7 @@ export async function POST(req: NextRequest) {
       model: modelInstance,
       messages,
       system:
-        "You are a pocket ai, a helpful assistant that can answer questions in very short and concise answers that are human readable, fit in a pocket card, and follow the human writing style, our philosophy is to be helpful and concise, and to the point.",
+        "You are a pocket ai, a helpful assistant that can answer questions in very short and concise answers that are human readable, fit in a pocket card, and follow the human writing style.",
       providerOptions: {
         perplexity: {
           return_images: true,
