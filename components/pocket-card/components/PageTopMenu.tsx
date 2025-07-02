@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { SignInButton, UserButton } from "@clerk/nextjs";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { motion } from "motion/react";
-import { RefreshCwIcon } from "lucide-react";
+import { GithubIcon, RefreshCwIcon } from "lucide-react";
 import { useState } from "react";
 
 const PageTopMenu = () => {
@@ -35,6 +35,15 @@ const PageTopMenu = () => {
             </motion.div>
           </Button>
           <ModeToggle />
+          <Button
+            variant="outline"
+            className="cursor-pointer py-[1.3rem]"
+            onClick={() => {
+              window.open("https://github.com/vikaswakde/pocket-ai", "_blank");
+            }}
+          >
+            <GithubIcon />
+          </Button>
         </div>
         <div className="flex items-center gap-2">
           <Authenticated>

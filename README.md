@@ -1,109 +1,104 @@
-# PocketCard Component
+# Pocket AI
 
-## Overview
+A modern, open-source AI chat application that allows you to interact with various cutting-edge language models. Pocket AI provides a sleek and intuitive interface for seamless conversations with your favorite AI models.
 
-`PocketCard.tsx` is a self-contained, animated React component that provides a user interface for interacting with various large language models (LLMs). It presents a "pocket AI" card that users can open to select from a list of AI models, and then engage in a chat conversation with the selected model.
+![Pocket AI Overview](https://github.com/user-attachments/assets/77d5dbef-b076-466b-9c68-c2990fcd7aa0)
 
-The component is designed to be a "plug-and-play" chat interface, with a rich, animated UI built using `motion/react` (Framer Motion) and styled with Tailwind CSS.
+## 🌐 Visit Pocket AI
 
-## Features
+Experience Pocket AI in action at [www.pocketai.site](https://www.pocketai.site)
 
-- **Model Selection:** Displays a list of AI models grouped by provider (e.g., Google, Meta, Mistral).
-- **Collapsible Sections:** Model groups can be expanded and collapsed.
-- **Chat Interface:** A seamless transition from model selection to a full-featured chat view.
-- **Separate Chat Histories:** Maintains individual chat history for each AI model.
-- **Real-time Interaction:** Uses `@ai-sdk/react` for streaming chat responses from a backend API.
-- **Error Handling:** Displays informative error messages, including for rate limiting.
-- **Rich Animations:** Fluid animations for opening/closing the card, switching views, and displaying messages, powered by `motion/react`.
-- **Custom Icons:** Supports both SVG icon components and image-based icons for models.
-- **Responsive Design:** Styled with Tailwind CSS for a modern look and feel.
+## ✨ Features
 
-## Dependencies
+- **Multi-Model Support:** Chat with a variety of AI models from different providers.
+- **Real-time Conversations:** Enjoy a smooth, real-time chat experience powered by Convex.
+- **User Authentication:** Secure user authentication with Clerk.
+- **Markdown Support:** Rich text formatting for AI responses with Markdown rendering.
+- **Sleek UI:** A beautiful and responsive user interface built with Next.js, Tailwind CSS, and Framer Motion.
+- **Themeable:** Switch between light and dark modes.
 
-This component relies on several external libraries:
+## 🚀 Tech Stack
 
-- `react`: For building the component.
-- `@ai-sdk/react`: For chat state management and backend communication.
-- `motion/react`: For all UI animations.
-- `lucide-react`: For icons.
-- `geist`: For the sans-serif font.
-- `@lobehub/icons`: For AI model provider logos.
-- `next/image`: For optimizing image icons.
-- `tailwindcss`: For styling.
-- `cn` utility (like `clsx` or `tailwind-merge`): for conditional class names.
+- **Framework:** [Next.js](https://nextjs.org/)
+- **Backend & Database:** [Convex](https://www.convex.dev/)
+- **Authentication:** [Clerk](https://clerk.com/)
+- **AI SDK:** [Vercel AI SDK](https://sdk.vercel.ai/docs)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components:** [Shadcn UI](https://www.ui.shadcn.com/) & [Lucide Icons](https://lucide.dev/)
+- **Animations:** [Framer Motion](https://www.framer.com/motion/)
 
-## File Structure
+## 🏁 Getting Started
 
-The `PocketCard` component and its logic are organized into the following structure:
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 
-- `components/pocket-card/PocketCard.tsx`: The main component file, responsible for rendering the UI and orchestrating the custom hooks.
-- `components/pocket-card/hooks/`: A directory containing custom React hooks that encapsulate the component's logic.
-  - `usePocket.ts`: The main hook that composes all other hooks and provides props to the `PocketCard` component.
-  - `useUserSession.ts`: Manages user authentication state (including anonymous users) and handles chat migration upon sign-in.
-  - `useChatHistory.ts`: Handles all interactions with the Convex database for fetching and saving chat history.
-  - `useAIModelManager.ts`: Manages the state related to AI model selection and UI presentation.
-  - `useAIChat.ts`: A wrapper around the Vercel AI SDK's `useChat` hook, managing real-time chat state and API communication.
-- `data/aiModels.ts`: A data file that exports the list of AI models to be displayed.
+### Prerequisites
 
-## Architecture: The Hook-Based Approach
+- [Node.js](https://nodejs.org/) (v20 or later)
+- [pnpm](https://pnpm.io/)
+- A [Convex](https://www.convex.dev/) account
+- A [Clerk](https://clerk.com/) account
+- API keys for [OpenRouter](https://openrouter.ai/) and/or [Perplexity](https://www.perplexity.ai/)
 
-The component's logic is cleanly separated into several custom hooks, following the "separation of concerns" principle. The `PocketCard.tsx` component remains lean, focusing primarily on rendering the UI, while the complex logic is delegated to the hooks.
+### Installation
 
-### Core Hooks
+1.  **Clone the repository:**
 
-- **`usePocket.ts`**: This is the central orchestrator hook. It brings together all the other specialized hooks, manages high-level UI state (like `isChatMode`), and exposes all the necessary data and event handlers to the `PocketCard` component.
+    ```bash
+    git clone https://github.com/your-username/pocket-ai.git
+    cd pocket-ai
+    ```
 
-- **`useUserSession.ts`**: Handles all aspects of the user's session. It uses `useConvexAuth` to determine if a user is authenticated, manages a unique ID for anonymous users stored in `localStorage`, and contains the logic to migrate an anonymous user's chats to their account when they sign in.
+2.  **Install dependencies:**
 
-- **`useAIModelManager.ts`**: Manages the state and logic for the model selection view. This includes which model is currently selected, which provider groups are expanded, and helper functions to get information about the selected model.
+    ```bash
+    pnpm install
+    ```
 
-- **`useChatHistory.ts`**: Acts as the data layer for chat history. It uses Convex queries (`useQuery`) to fetch the list of user chats and the messages for the active chat. It also provides Convex mutations (`useMutation`) to create new chats and save new messages to the database.
+3.  **Set up environment variables:**
+    Create a `.env.local` file in the root of your project and add the following environment variables. You can get these values from your Convex, Clerk, OpenRouter, and Perplexity dashboards.
 
-- **`useAIChat.ts`**: This hook is a dedicated wrapper for the Vercel AI SDK's `useChat` hook. It's configured to communicate with the `/api/chat` backend endpoint. It handles the real-time aspects of the chat, including managing the `messages` array, the user's `input`, and the API request `status`. It also contains the `onFinish`, `onError`, and `onResponse` callbacks to handle chat persistence and error states like rate limiting.
+    ```env
+    OPENROUTER_API_KEY="your_openrouter_api_key"
+    PERPLEXITY_API_KEY="your_perplexity_api_key"
+    UPSTASH_REDIS_REST_URL="your_upstash_redis_url"
+    UPSTASH_REDIS_REST_TOKEN="your_upstash_redis_token"
+    IP_ALLOWLIST="your_ip_allowlist"
 
-## Model Data (`aiModels.ts`)
+    # Auth
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="your_clerk_publishable_key"
+    CLERK_SECRET_KEY="your_clerk_secret_key"
+    NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+    NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/
+    NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/
 
-The `aiModels` array defines the structure of the model list. Each parent model object can have a `children` array containing specific sub-models.
 
-The `Model` type is defined within `PocketCard.tsx` and imported into `aiModels.ts`.
+    # DB
+    CONVEX_DEPLOYMENT="your_convex_deployment"
+    NEXT_PUBLIC_CONVEX_URL="your_convex_url"
+    CLERK_FRONTEND_API_URL="your_clerk_frontend_api"
+    ```
 
-```typescript
-// src/crafts/PocketCard.tsx
-export type Model = {
-  id: string;
-  name: string;
-  description: string;
-  Icon: React.ComponentType | any; // Can be a component or an image path
-  apiId: string;
-  children?: Model[];
-};
-```
+4.  **Run the development server:**
+    ```bash
+    pnpm dev
+    ```
 
-The `PocketCard` component iterates over this array to render the nested list of models.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Animations (`motion/react`)
+## 📁 Project Structure
 
-Animations are a key part of the user experience.
+Here's an overview of the key directories in this project:
 
-- `AnimatePresence`: Manages the mounting and unmounting animations of components (e.g., the main card, chat messages).
-- `motion.div`: Used extensively with `initial`, `animate`, `exit`, and `variants` props to create complex, spring-based animations.
-- `variants`: Pre-defined animation states (e.g., `listVariants`, `caretVariants`) are used for consistency and cleaner code.
+- `app/`: Contains the pages and layouts of the Next.js application.
+- `components/`: Reusable React components used throughout the application. The core UI logic is in `components/pocket-card`.
+- `convex/`: Holds the Convex backend functions and the database schema (`schema.ts`).
+- `lib/`: Utility functions.
+- `public/`: Static assets like images and fonts.
 
-## How to Use
+## 🤝 Contributing
 
-To use the `PocketCard` component, simply import it and render it in your application. Ensure that you have a corresponding API route set up at `/api/chat` that can handle requests from `@ai-sdk/react`.
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/vikaswakde/pocket-ai/issues).
 
-```jsx
-// Example: in your page.tsx
-import PocketCard from "@/crafts/PocketCard";
+## 📝 License
 
-export default function HomePage() {
-  return (
-    <main className="flex h-screen items-center justify-center">
-      <PocketCard />
-    </main>
-  );
-}
-```
-
-Make sure the backend API at `/api/chat` is configured to accept a `model` property in the request body and stream back responses in the format expected by the AI SDK.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
