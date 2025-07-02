@@ -6,7 +6,7 @@ export const listVariants = {
   },
   hover: {
     opacity: 1,
-    scale: 1.01,
+    scale: 1,
     filter: "blur(0px)",
   },
   visible: {
