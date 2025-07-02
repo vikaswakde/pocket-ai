@@ -3,10 +3,14 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { SignInButton, UserButton } from "@clerk/nextjs";
 import { Authenticated, Unauthenticated } from "convex/react";
+import { motion } from "motion/react";
 import { RefreshCwIcon } from "lucide-react";
+import { useState } from "react";
 
 const PageTopMenu = () => {
+  const [isReloading, setIsReloading] = useState(false);
   const pageReload = () => {
+    setIsReloading(true);
     window.location.reload();
   };
 
@@ -19,7 +23,16 @@ const PageTopMenu = () => {
             className="cursor-pointer py-[1.3rem]"
             onClick={pageReload}
           >
-            <RefreshCwIcon />
+            <motion.div
+              animate={{ rotate: isReloading ? 360 : 0 }}
+              transition={{
+                repeat: isReloading ? Infinity : 0,
+                ease: "linear",
+                duration: 3,
+              }}
+            >
+              <RefreshCwIcon />
+            </motion.div>
           </Button>
           <ModeToggle />
         </div>
