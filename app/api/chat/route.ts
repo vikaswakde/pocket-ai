@@ -13,10 +13,42 @@ export const maxDuration = 30;
 const redis = Redis.fromEnv();
 
 export async function POST(req: NextRequest) {
+  const { messages, model } = await req.json();
+
   const { userId } = await auth();
   const currUser = await currentUser();
+  const selectedModel = model
+  // sonar-pro specific rate limit
+  if (selectedModel === "sonar-pro") {
+    if (userId) {
+      // logged-in user logic for sonar-pro
+      const rateLimitKey = `pocket-ai-ratelimit:sonar-pro:user:${userId}`;
+      const currentUsage = await redis.get(rateLimitKey);
 
-  if (userId) {
+      if (currentUsage && Number(currentUsage) >= 2) {
+        return new Response(
+          JSON.stringify({
+            error: "Subscribe to get unlimited access to Sonar Pro.",
+          }),
+          { status: 429, headers: { "Content-Type": "application/json" } },
+        );
+      }
+    } else {
+      // anon user logic for sonar-pro
+      const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+      const rateLimitKey = `pocket-ai-ratelimit:sonar-pro:ip:${ip}`;
+      const currentUsage = await redis.get(rateLimitKey);
+      if (currentUsage && Number(currentUsage) >= 1) {
+        return new Response(
+          JSON.stringify({ error: "Sign in to use Sonar Pro" }),
+          {
+            status: 429,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+    }
+  } else if (userId) {
     // Check for exception email
     const isExceptionUser =
       currUser?.emailAddresses?.[0]?.emailAddress?.includes(
@@ -29,7 +61,7 @@ export async function POST(req: NextRequest) {
       const rateLimitKey = `pocket-ai-ratelimit:user:${userId}`;
       const currentUsage = await redis.get(rateLimitKey);
 
-      if (currentUsage && Number(currentUsage) >= 10) {
+      if (currentUsage && Number(currentUsage) >= 7) {
         return new Response(
           JSON.stringify({
             error:
@@ -63,9 +95,6 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { messages, model } = await req.json();
-
-    const selectedModel = model || "google/gemma-2-12b-it:free";
     const isPerplexity = selectedModel.includes("sonar");
     let modelInstance;
 
@@ -102,7 +131,26 @@ export async function POST(req: NextRequest) {
         },
       },
       onFinish: async () => {
-        if (userId) {
+        if (selectedModel === "sonar-pro") {
+          if (userId) {
+            // increment usage for logged-in user for sonar-pro
+            const rateLimitKey = `pocket-ai-ratelimit:sonar-pro:user:${userId}`;
+            const newUsage = await redis.incr(rateLimitKey);
+            if (newUsage === 1) {
+              // Set expiration for 24 hours
+              await redis.expire(rateLimitKey, 60 * 60 * 24);
+            }
+          } else {
+            // increment usage for anonymous user for sonar-pro
+            const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+            const rateLimitKey = `pocket-ai-ratelimit:sonar-pro:ip:${ip}`;
+            const newUsage = await redis.incr(rateLimitKey);
+
+            if (newUsage === 1) {
+              await redis.expire(rateLimitKey, 60 * 60 * 24); // 24 hours
+            }
+          }
+        } else if (userId) {
           // increment usage for logged-in user
           const rateLimitKey = `pocket-ai-ratelimit:user:${userId}`;
           const newUsage = await redis.incr(rateLimitKey);
@@ -124,7 +172,7 @@ export async function POST(req: NextRequest) {
 
             if (newUsage === 1) {
               // set an expiration for the key if it's the first time
-              await redis.expire(rateLimitKey, 60 * 60 * 2); // 2 hours
+              await redis.expire(rateLimitKey, 60 * 60 * 24); // 24 hours
             }
           }
         }
