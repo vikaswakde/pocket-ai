@@ -4,11 +4,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { BrainIcon, CloudLightningIcon, GlobeIcon } from "lucide-react";
+import { BrainIcon, GlobeIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
-import flashLightIcon from "@/images/flash-light-icon.svg";
 
 type ModelFiltersProps = {
   filter: string | null;
