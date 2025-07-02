@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
   const { userId } = await auth();
   const currUser = await currentUser();
-  const selectedModel = model
+  const selectedModel = model;
   // sonar-pro specific rate limit
   if (selectedModel === "sonar-pro") {
     if (userId) {
