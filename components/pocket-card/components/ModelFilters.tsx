@@ -17,7 +17,7 @@ const containerVariants = {
   visible: {
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 1.4,
+      delayChildren: 0.5,
     },
   },
 };
@@ -28,7 +28,7 @@ const itemVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      duration: 0.6,
+      duration: 0.3,
       ease: "easeInOut" as const,
       type: "spring" as const,
       stiffness: 100,
@@ -51,7 +51,7 @@ const itemVariants = {
 export const ModelFilters = ({ filter, handleFilter }: ModelFiltersProps) => {
   return (
     <motion.div
-      className="mt-4 -mb-5 flex items-center justify-center gap-2 text-xs"
+      className="absolute top-21 right-5 flex items-center justify-center gap-2 text-xs"
       variants={containerVariants}
       initial="hidden"
       animate="visible"

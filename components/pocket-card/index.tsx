@@ -17,6 +17,7 @@ const PocketCard = () => {
     isChatMode,
     getSelectedModelName,
     exitChatMode,
+    selectedModel,
     ...chatProps
   } = usePocket();
   const [filter, setFilter] = useState<string | null>(null);
@@ -106,7 +107,9 @@ const PocketCard = () => {
               </motion.p>
 
               {/* model filter */}
-              <ModelFilters filter={filter} handleFilter={handleFilter} />
+              {selectedModel && (
+                <ModelFilters filter={filter} handleFilter={handleFilter} />
+              )}
             </>
           )}
 
@@ -145,7 +148,11 @@ const PocketCard = () => {
               />
             ) : (
               <>
-                <ModelSelectionView {...chatProps} filter={filter} />
+                <ModelSelectionView
+                  {...chatProps}
+                  selectedModel={selectedModel}
+                  filter={filter}
+                />
               </>
             )}
           </motion.div>
