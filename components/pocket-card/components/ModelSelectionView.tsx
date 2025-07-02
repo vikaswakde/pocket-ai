@@ -30,6 +30,7 @@ type ModelSelectionViewProps = {
   handleCardClick: (modelId: string) => void;
   expandedModels: string[];
   handleChatWithModel: (modelId: string, e: React.MouseEvent) => void;
+  filter: string | null;
 };
 
 export const ModelSelectionView = ({
@@ -37,6 +38,7 @@ export const ModelSelectionView = ({
   handleCardClick,
   expandedModels,
   handleChatWithModel,
+  filter,
 }: ModelSelectionViewProps) => {
   const getLabelIcon = (label: string, size: number = 12) => {
     const iconProps = {
@@ -67,6 +69,16 @@ export const ModelSelectionView = ({
     }
   };
 
+  const filteredModels = filter
+    ? aiModels.filter((model) => {
+        const parentHasLabel = model.labels?.includes(filter);
+        const childHasLabel = model.children?.some((child) =>
+          child.labels?.includes(filter),
+        );
+        return parentHasLabel || childHasLabel;
+      })
+    : aiModels;
+
   return (
     <motion.div
       variants={listVariants}
@@ -80,7 +92,7 @@ export const ModelSelectionView = ({
       }}
       className="scrollbar-hide absolute inset-0 h-full w-full divide-y divide-neutral-200 overflow-y-auto rounded-[32px] bg-white/35 p-2.5 dark:divide-neutral-500/60 dark:bg-[#161616]"
     >
-      {aiModels.map((model) => (
+      {filteredModels.map((model) => (
         <div key={model.id}>
           <div
             className={cn(
@@ -184,13 +196,13 @@ export const ModelSelectionView = ({
                       </div>
                     </div>
                     <button
-                      className="cursor-pointer self-center rounded-lg px-3 py-1.5 text-sm text-neutral-400 transition-colors duration-200 group-hover:bg-neutral-100 dark:group-hover:bg-neutral-700 dark:hover:bg-neutral-800 hover:border-neutral-200 dark:hover:border-neutral-500/60 hover:border bg-neutral-200/10 dark:bg-black/10"
+                      className="cursor-pointer self-center rounded-lg bg-neutral-200/10 px-3 py-1.5 text-sm text-neutral-400 transition-colors duration-200 group-hover:bg-neutral-100 hover:border hover:border-neutral-200 dark:bg-black/10 dark:group-hover:bg-neutral-700 dark:hover:border-neutral-500/60 dark:hover:bg-neutral-800"
                       onClick={(e) => handleChatWithModel(child.id, e)}
                     >
                       <span className="text-xs">ask</span>{" "}
                       <ArrowRight
                         size={12}
-                        className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ml-1 inline -rotate-45 transition-transform duration-200 group-hover:scale-125 "
+                        className="ml-1 inline -rotate-45 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:scale-125"
                       />
                     </button>
                   </motion.div>

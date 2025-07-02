@@ -3,11 +3,12 @@
 import { cn } from "@/lib/utils";
 import { GeistSans } from "geist/font/sans";
 import { AnimatePresence, motion } from "motion/react";
-import React from "react";
-import { usePocket } from "./hooks/usePocket";
+import { useState } from "react";
 import { CardHeader } from "./components/CardHeader";
 import { ChatView } from "./components/ChatView";
+import { ModelFilters } from "./components/ModelFilters";
 import { ModelSelectionView } from "./components/ModelSelectionView";
+import { usePocket } from "./hooks/usePocket";
 
 const PocketCard = () => {
   const {
@@ -18,6 +19,11 @@ const PocketCard = () => {
     exitChatMode,
     ...chatProps
   } = usePocket();
+  const [filter, setFilter] = useState<string | null>(null);
+
+  const handleFilter = (label: string) => {
+    setFilter((prevFilter) => (prevFilter === label ? null : label));
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -62,41 +68,46 @@ const PocketCard = () => {
           />
 
           {!isChatMode && (
-            <motion.p
-              className="-mt-3.5 max-w-[52%] px-4 text-[15px] leading-5 text-wrap text-neutral-600/70 dark:text-neutral-300/70"
-              initial={{
-                y: 300,
-                opacity: 0,
-              }}
-              animate={{
-                y: 0,
-                opacity: 1,
-                transition: {
-                  delay: 1.3,
-                  duration: 0.5,
-                  ease: "easeInOut",
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 20,
-                },
-              }}
-              exit={{
-                y: 300,
-                opacity: 0,
-                transition: {
-                  delay: 0.2,
-                  duration: 0.7,
-                  ease: [0.33, 1, 0.68, 1],
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 8,
-                },
-              }}
-            >
-              {isChatMode
-                ? `chat with ${getSelectedModelName()}`
-                : "A collection of smart AI models."}
-            </motion.p>
+            <>
+              <motion.p
+                className="-mt-3.5 max-w-[52%] px-4 text-[15px] leading-5 text-wrap text-neutral-600/70 dark:text-neutral-300/70"
+                initial={{
+                  y: 300,
+                  opacity: 0,
+                }}
+                animate={{
+                  y: 0,
+                  opacity: 1,
+                  transition: {
+                    delay: 1.3,
+                    duration: 0.5,
+                    ease: "easeInOut",
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                  },
+                }}
+                exit={{
+                  y: 300,
+                  opacity: 0,
+                  transition: {
+                    delay: 0.2,
+                    duration: 0.7,
+                    ease: [0.33, 1, 0.68, 1],
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 8,
+                  },
+                }}
+              >
+                {isChatMode
+                  ? `chat with ${getSelectedModelName()}`
+                  : "A collection of smart AI models."}
+              </motion.p>
+
+              {/* model filter */}
+              <ModelFilters filter={filter} handleFilter={handleFilter} />
+            </>
           )}
 
           <motion.div
@@ -133,7 +144,9 @@ const PocketCard = () => {
                 getSelectedModelName={getSelectedModelName}
               />
             ) : (
-              <ModelSelectionView {...chatProps} />
+              <>
+                <ModelSelectionView {...chatProps} filter={filter} />
+              </>
             )}
           </motion.div>
         </motion.div>

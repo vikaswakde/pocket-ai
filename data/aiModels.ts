@@ -75,7 +75,7 @@ export const aiModels: Model[] = [
         description: "Specialized for function calling and reduced errors.",
         Icon: Mistral.Avatar,
         apiId: "mistralai/mistral-nemo:free",
-        labels: ["reasoning"],
+        labels: ["reasoning", "fast"],
       },
     ],
   },
@@ -87,7 +87,7 @@ export const aiModels: Model[] = [
       "MoE architecture to excel in reasoning, multilingual,and agent tasks",
     Icon: Qwen.Avatar,
     apiId: "qwen/qwq-32b:free",
-    labels: ["reasoning"],
+    labels: ["reasoning", "fast"],
     children: [
       {
         id: "qwen/qwq-32b:free",
@@ -95,7 +95,7 @@ export const aiModels: Model[] = [
         description: "Strong performance in reasoning and code generation.",
         Icon: Qwen.Avatar,
         apiId: "qwen/qwq-32b:free",
-        labels: ["reasoning"],
+        labels: ["reasoning", "fast"],
       },
       {
         id: "qwen3-30b-a3b",
@@ -103,7 +103,7 @@ export const aiModels: Model[] = [
         description: "Advanced model with strong multilingual capabilities.",
         Icon: Qwen.Avatar,
         apiId: "qwen/qwen3-30b-a3b:free",
-        labels: ["reasoning", "multilingual"],
+        labels: ["reasoning", "multilingual", "fast"],
       },
       {
         id: "qwen2.5-vl-32b-instruct",
@@ -129,7 +129,7 @@ export const aiModels: Model[] = [
         description: "Lightweight, fast, and affordable web search.",
         Icon: Perplexity.Avatar,
         apiId: "sonar",
-        labels: ["web search"],
+        labels: ["web search", "fast"],
       },
       {
         id: "sonar-pro",
@@ -155,7 +155,7 @@ export const aiModels: Model[] = [
           "Fast, efficient model with enhanced context understanding.",
         Icon: Gemini.Avatar,
         apiId: "google/gemini-2.0-flash-exp:free",
-        labels: ["vision", "reasoning"],
+        labels: ["vision", "reasoning", "fast"],
       },
       {
         id: "gemma-3-12b-it",
@@ -163,7 +163,7 @@ export const aiModels: Model[] = [
         description: "Lightweight and cost-effective for high performance.",
         Icon: Gemini.Avatar,
         apiId: "google/gemma-3-12b-it:free",
-        labels: ["reasoning"],
+        labels: ["reasoning", "fast"],
       },
       {
         id: "gemma-3-27b-it",
@@ -171,7 +171,7 @@ export const aiModels: Model[] = [
         description: "Larger model with enhanced reasoning capabilities.",
         Icon: Gemini.Avatar,
         apiId: "google/gemma-3-27b-it:free",
-        labels: ["reasoning", "vision"],
+        labels: ["reasoning", "vision", "fast"],
       },
     ],
   },

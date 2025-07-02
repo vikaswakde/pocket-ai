@@ -93,7 +93,7 @@ export const CardHeader = ({
                 damping: 20,
               },
             }}
-            className="text-xl font-semibold text-neutral-700/90 dark:text-neutral-300/90 mt-2  border-neutral-300 dark:border-neutral-300/90 rounded-lg px-2 items-center flex max-w-[70%] text-wrap"
+            className="mt-2 flex max-w-[70%] items-center rounded-lg border-neutral-300 px-2 text-xl font-semibold text-wrap text-neutral-700/90 dark:border-neutral-300/90 dark:text-neutral-300/90"
           >
             {getSelectedModelName()}
           </motion.h2>
@@ -154,7 +154,7 @@ export const CardHeader = ({
           "shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_10px_15px_-3px_rgb(0_0_0/0.1),0_4px_6px_-4px_rgb(0_0_0/0.1)]",
           "dark:shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_10px_15px_-3px_rgb(255_255_255/0.1),0_4px_6px_-4px_rgb(255_255_255/0.1)]",
           "rounded-[0.82rem] px-3 py-2 opacity-85",
-          " dark:border-neutral-500/50 dark:border "
+          "dark:border dark:border-neutral-500/50",
         )}
       >
         <Image
@@ -175,7 +175,7 @@ export const CardHeader = ({
               opacity: 1,
             },
           }}
-          className="overflow-hidden cursor-pointer"
+          className="cursor-pointer overflow-hidden"
           onClick={() => {
             if (isChatMode) {
               exitChatMode();
@@ -184,7 +184,7 @@ export const CardHeader = ({
             }
           }}
         >
-          <XIcon className="text-neutral-400 h-5 w-5 ml-1 dark:text-neutral-300/90" />
+          <XIcon className="ml-1 h-5 w-5 text-neutral-400 dark:text-neutral-300/90" />
         </motion.button>
       </motion.div>
     </div>
