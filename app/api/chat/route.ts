@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       const rateLimitKey = `pocket-ai-ratelimit:sonar-pro:user:${userId}`;
       const currentUsage = await redis.get(rateLimitKey);
 
-      if (currentUsage && Number(currentUsage) >= 2) {
+      if (currentUsage && Number(currentUsage) >= 3) {
         return new Response(
           JSON.stringify({
             error: "Subscribe to get unlimited access to Sonar Pro.",
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
       const rateLimitKey = `pocket-ai-ratelimit:sonar-pro:ip:${ip}`;
       const currentUsage = await redis.get(rateLimitKey);
-      if (currentUsage && Number(currentUsage) >= 1) {
+      if (currentUsage && Number(currentUsage) >= 2) {
         return new Response(
           JSON.stringify({ error: "Sign in to use Sonar Pro" }),
           {
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       const rateLimitKey = `pocket-ai-ratelimit:ip:${ip}`;
       const currentUsage = await redis.get(rateLimitKey);
 
-      if (currentUsage && Number(currentUsage) >= 3) {
+      if (currentUsage && Number(currentUsage) >= 5) {
         return new Response(
           JSON.stringify({ error: "Sign in to increase limits" }),
           { status: 429, headers: { "Content-Type": "application/json" } },
