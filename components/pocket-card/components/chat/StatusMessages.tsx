@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { SignInButton } from "@clerk/nextjs";
-import { Message } from "ai";
 import { AlertCircleIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
