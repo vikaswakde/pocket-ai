@@ -39,10 +39,10 @@ export const ChatView = ({
   showSignInButton,
 }: ChatViewProps) => {
   return (
-    <div className="absolute inset-0 flex h-full w-full flex-col rounded-[32px] bg-white/35 p-4 dark:bg-[#161616]">
+    <div className="absolute inset-0 flex h-full w-full flex-col rounded-[32px] bg-white/35 pt-4 px- dark:bg-[#161616]">
       <div
         ref={chatContainerRef}
-        className="scrollbar-hide mb-4 flex-1 overflow-y-auto"
+        className="scrollbar-hide mb-4 flex-1 overflow-y-auto px-4"
       >
         <MessageList messages={messages} status={status} />
         <StatusMessages

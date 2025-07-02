@@ -1,6 +1,7 @@
 "use client";
 
 import { SendIcon, XIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import TextareaAutosize from "react-textarea-autosize";
 
 type ChatInputProps = {
@@ -28,10 +29,12 @@ export const ChatInput = ({
   stop,
   getSelectedModelName,
 }: ChatInputProps) => {
+  const isAwaitingResponse = status === "submitted" || status === "streaming";
+
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-end gap-2 rounded-[0.82rem] border border-neutral-200 p-3 dark:border-neutral-500/60 dark:bg-black/50"
+      className="flex items-end gap-2 rounded-br-[32px] rounded-bl-[32px] border border-neutral-200 p-4 dark:border-neutral-500/60 dark:bg-black/50"
     >
       <TextareaAutosize
         ref={inputRef}
@@ -42,8 +45,8 @@ export const ChatInput = ({
             ? "You have reached the message limit."
             : `Ask ${getSelectedModelName()} a question...`
         }
-        className="scrollbar-hide flex-1 resize-none bg-transparent text-sm outline-none dark:text-white"
-        disabled={status !== "ready" || isRateLimited}
+        className="scrollbar-hide flex-1 resize-none bg-transparent p-1 text-sm outline-none dark:text-white"
+        disabled={isAwaitingResponse || isRateLimited}
         maxRows={5}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -53,23 +56,42 @@ export const ChatInput = ({
           }
         }}
       />
-      {status === "streaming" ? (
-        <button
-          type="button"
-          onClick={() => stop()}
-          className="rounded-lg bg-gray-200/45 p-2 text-gray-800 dark:bg-black/45 dark:text-white"
-        >
-          <XIcon size={16} />
-        </button>
-      ) : (
-        <button
-          type="submit"
-          className="h-fit cursor-pointer rounded-lg bg-gray-200/45 p-1 text-gray-800 dark:bg-gray-900/85 dark:text-white"
-          disabled={status !== "ready" || !input.trim() || isRateLimited}
-        >
-          <SendIcon size={16} className="mx-1" />
-        </button>
-      )}
+      <AnimatePresence mode="wait">
+        {isAwaitingResponse ? (
+          <motion.button
+            key="stop"
+            type="button"
+            onClick={() => stop()}
+            className="rounded-lg bg-gray-200/45 p-2 text-gray-800 dark:bg-black/45 dark:text-white"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+          >
+            <XIcon size={16} />
+          </motion.button>
+        ) : (
+          <motion.button
+            key="send"
+            type="submit"
+            className="h-fit cursor-pointer rounded-lg bg-gray-200/45 p-2 text-gray-800 dark:bg-gray-900/85 dark:text-white"
+            disabled={isAwaitingResponse || !input.trim() || isRateLimited}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{
+              x: 10,
+              y: 10,
+              opacity: 0,
+              scale: 0.5,
+              transition: {
+                duration: 0.5,
+                ease: "easeInOut",
+              },
+            }}
+          >
+            <SendIcon size={16} className="mx-1" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </form>
   );
 };
