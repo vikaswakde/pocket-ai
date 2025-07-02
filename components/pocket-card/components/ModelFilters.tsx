@@ -51,7 +51,7 @@ const itemVariants = {
 export const ModelFilters = ({ filter, handleFilter }: ModelFiltersProps) => {
   return (
     <motion.div
-      className="absolute top-21 right-5 flex items-center justify-center gap-2 text-xs"
+      className="absolute top-20 right-5 flex items-center justify-center gap-2 text-xs"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
