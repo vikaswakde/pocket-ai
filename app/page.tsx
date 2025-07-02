@@ -1,4 +1,4 @@
-import PocketCard from "@/components/PocketCard";
+import PocketCard from "@/components/pocket-card";
 import PageTopMenu from "@/components/pocket-card/components/PageTopMenu";
 export default function Home() {
   return (
