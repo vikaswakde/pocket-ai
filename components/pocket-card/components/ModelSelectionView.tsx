@@ -237,7 +237,7 @@ export const ModelSelectionView = ({
       {!isHovering && !hasHoveredOnce && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="text-sm text-neutral-500">
-            {isMobile ? "Click me" : "Hover me"}
+            {isMobile ? "Tap me" : "Hover me"}
           </div>
         </div>
       )}
