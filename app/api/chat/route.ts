@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       const rateLimitKey = `pocket-ai-ratelimit:user:${userId}`;
       const currentUsage = await redis.get(rateLimitKey);
 
-      if (currentUsage && Number(currentUsage) >= 10) {
+      if (currentUsage && Number(currentUsage) >= 7) {
         return new Response(
           JSON.stringify({
             error:
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       const rateLimitKey = `pocket-ai-ratelimit:ip:${ip}`;
       const currentUsage = await redis.get(rateLimitKey);
 
-      if (currentUsage && Number(currentUsage) >= 4) {
+      if (currentUsage && Number(currentUsage) >= 3) {
         return new Response(
           JSON.stringify({ error: "Sign in to increase limits" }),
           { status: 429, headers: { "Content-Type": "application/json" } },
