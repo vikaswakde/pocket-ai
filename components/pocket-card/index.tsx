@@ -21,6 +21,7 @@ const PocketCard = () => {
     ...chatProps
   } = usePocket();
   const [filter, setFilter] = useState<string | null>(null);
+  const [hasHoveredOnce, setHasHoveredOnce] = useState(false);
 
   const handleFilter = (label: string) => {
     setFilter((prevFilter) => (prevFilter === label ? null : label));
@@ -152,6 +153,8 @@ const PocketCard = () => {
                   {...chatProps}
                   selectedModel={selectedModel}
                   filter={filter}
+                  hasHoveredOnce={hasHoveredOnce}
+                  setHasHoveredOnce={setHasHoveredOnce}
                 />
               </>
             )}
