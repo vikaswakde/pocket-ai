@@ -13,31 +13,6 @@ import {
 // Updated model structure with nested children
 export const aiModels: Model[] = [
   {
-    id: "meta-llama/llama-4-maverick-17b-128e-instruct:free",
-    name: "Meta",
-    description: "Multimodal models with text and vision capabilities.",
-    Icon: Meta.Avatar,
-    apiId: "meta-llama/llama-4-maverick-17b-128e-instruct:free",
-    children: [
-      {
-        id: "llama-4-maverick-17b-128e-instruct",
-        name: "Llama 4 Maverick",
-        description: "High-performance MoE model with 128 experts.",
-        Icon: Meta.Avatar,
-        apiId: "meta-llama/llama-4-maverick-17b-128e-instruct:free",
-        labels: ["vision", "reasoning"],
-      },
-      {
-        id: "llama-4-scout-17b-16e-instruct",
-        name: "Llama 4 Scout",
-        description: "Efficient MoE model with 10M token context.",
-        Icon: Meta.Avatar,
-        apiId: "meta-llama/llama-4-scout-17b-16e-instruct:free",
-        labels: ["vision", "reasoning"],
-      },
-    ],
-  },
-  {
     id: "deepseek/deepseek-r1-0528-qwen3-8b:free",
     name: "DeepSeek",
     description: "Specialized models for reasoning and multimodality.",
@@ -79,7 +54,6 @@ export const aiModels: Model[] = [
       },
     ],
   },
-
   {
     id: "qwen/qwq-32b:free",
     name: "Qwen",
@@ -190,6 +164,31 @@ export const aiModels: Model[] = [
         Icon: Sarvam,
         apiId: "sarvamai/sarvam-m:free",
         labels: ["reasoning"],
+      },
+    ],
+  },
+  {
+    id: "meta-llama/llama-4-maverick-17b-128e-instruct:free",
+    name: "Meta",
+    description: "Multimodal models with text and vision capabilities.",
+    Icon: Meta.Avatar,
+    apiId: "meta-llama/llama-4-maverick-17b-128e-instruct:free",
+    children: [
+      {
+        id: "llama-4-maverick-17b-128e-instruct",
+        name: "Llama 4 Maverick",
+        description: "High-performance MoE model with 128 experts.",
+        Icon: Meta.Avatar,
+        apiId: "meta-llama/llama-4-maverick-17b-128e-instruct:free",
+        labels: ["vision", "reasoning"],
+      },
+      {
+        id: "llama-4-scout-17b-16e-instruct",
+        name: "Llama 4 Scout",
+        description: "Efficient MoE model with 10M token context.",
+        Icon: Meta.Avatar,
+        apiId: "meta-llama/llama-4-scout-17b-16e-instruct:free",
+        labels: ["vision", "reasoning"],
       },
     ],
   },
