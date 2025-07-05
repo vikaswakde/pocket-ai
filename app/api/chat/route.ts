@@ -12,8 +12,29 @@ export const maxDuration = 30;
 
 const redis = Redis.fromEnv();
 
+// Simple greetings detector
+function isSimpleGreeting(message: string): boolean {
+  const simpleGreetings = ["hi", "hello", "hey", "yo"];
+  const normalized = message.toLowerCase().trim();
+  return simpleGreetings.includes(normalized) || normalized.length <= 5;
+}
+
 export async function POST(req: NextRequest) {
   const { messages, model } = await req.json();
+
+  // Check if the last message is a simple greeting
+  if (messages && messages.length > 0) {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage.role === "user" && isSimpleGreeting(lastMessage.content)) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "Let's not waste precious compute on simple greetings! Please ask a specific question so I can provide a helpful response.",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+  }
 
   const { userId } = await auth();
   const currUser = await currentUser();
