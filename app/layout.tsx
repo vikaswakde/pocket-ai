@@ -17,9 +17,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pocket AI",
+  title: "Pocket AI -  a multi-model AI platform",
   description:
     "A ai software where you can chat with multiple models with a intuitive UI",
+  icons: {
+    icon: "/pocketAI.png",
+  },
 };
 
 export default function RootLayout({
