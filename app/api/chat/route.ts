@@ -22,6 +22,7 @@ function isSimpleGreeting(message: string): boolean {
     "What’s up",
     "whats'up",
     "whatsup",
+    "Hi there",
   ];
   const normalized = message.toLowerCase().trim();
   return simpleGreetings.includes(normalized) || normalized.length <= 5;
