@@ -14,7 +14,7 @@ const redis = Redis.fromEnv();
 
 // Simple greetings detector
 function isSimpleGreeting(message: string): boolean {
-  const simpleGreetings = ["hi", "hello", "hey", "yo"];
+  const simpleGreetings = ["hi", "hello", "hey", "yo","What’s up", "whats up"];
   const normalized = message.toLowerCase().trim();
   return simpleGreetings.includes(normalized) || normalized.length <= 5;
 }
